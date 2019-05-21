@@ -36,9 +36,7 @@ public class Main {
                 case 3:
                     command.add(new Human(runLength, jumpHeight));
                     break;
-                    default:
-                        System.out.println("Input 1, 2 or 3");
-                        continue;
+
             }
             System.out.println("Your command is:");
             System.out.println(command.toString());
