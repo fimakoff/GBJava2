@@ -46,6 +46,16 @@ public class Main {
 
         System.out.println("Ok! We are finished to complied your command!\nAre you ready?");
 
+        command.get(0);
+
+
+
+
+
+
+
+
+
 
 
         //        int choose = 0;

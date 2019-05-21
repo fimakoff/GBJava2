@@ -7,7 +7,7 @@ public class Wall {
         this.height = height;
     }
 
-    public void setHeight(int length) {
+    public void setHeight(int height) {
         this.height = height;
     }
 
