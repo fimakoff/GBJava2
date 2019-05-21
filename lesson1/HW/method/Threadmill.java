@@ -17,6 +17,6 @@ public class Threadmill {
 
     @Override
     public String toString() {
-        return "Длина дорожки: " + length;
+        return "Length of threadmill: " + length;
     }
 }

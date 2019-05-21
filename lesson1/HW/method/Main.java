@@ -18,7 +18,7 @@ public class Main {
         Scanner scInt = new Scanner(System.in);
         Scanner scCh = new Scanner(System.in);
         int choice;
-        String ch = null;
+        String ch;
         do {
             int jumpHeight = rand.nextInt(10) + 1;
             int runLength = rand.nextInt(10) + 1;

@@ -31,6 +31,6 @@ public class Robot implements Moveable {
     @Override
     public String toString() {
 
-        return "Robot (run: " + getMaxRunLength() + " jump: " + getMaxJumpHeight() + ")\n";
+        return "Robot (run: " + getMaxRunLength() + " jump: " + getMaxJumpHeight() + ")";
     }
 }

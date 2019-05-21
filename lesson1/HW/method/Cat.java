@@ -32,7 +32,7 @@ public class Cat implements Moveable {
     @Override
     public String toString() {
 
-        return "Cat (run: " + getMaxRunLength() + " jump: " + getMaxJumpHeight() + ")\n";
+        return "Cat (run: " + getMaxRunLength() + " jump: " + getMaxJumpHeight() + ")";
     }
 
 

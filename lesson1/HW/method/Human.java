@@ -31,6 +31,6 @@ public class Human implements Moveable {
     @Override
     public String toString() {
 
-        return "Human (run: " + getMaxRunLength() + " jump: " + getMaxJumpHeight() + ")\n";
+        return "Human (run: " + getMaxRunLength() + " jump: " + getMaxJumpHeight() + ")";
     }
 }
