@@ -8,7 +8,7 @@ public class Wall {
         this.count = count;
         this.height = height;
         System.out.println("Количество барьеров: " + count);
-        System.out.println("высота барьера: " + height);
+        System.out.println("Высота барьера: " + height);
     }
 
     public void setHeight(int height) {

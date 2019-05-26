@@ -1,24 +1,44 @@
 package lesson1.HW.hurdles;
 
 public class Hurdles {
-    private Object[] hurdles = new Object[100];
 
-    public Hurdles(int maxSizeHurdles) {
-        Threadmill threadmill = new Threadmill(10, 3);
-//        Threadmill[] threadmills = new Threadmill[maxSizeHurdles];
-        Wall wall = new Wall(3,2);
-//        Wall[] walls = new Wall[threadmills.length-1];
-//        System.out.println(maxSizeHurdles);
-//        System.out.println(threadmills.length-1);
 
-        for (int i = 0, j=0; i < 2*maxSizeHurdles; i+=2,j++) {
-            this.hurdles[i] = threadmill;
-            if (i==(2*maxSizeHurdles-1))
-                break;
-            this.hurdles[i+1] = wall;
+    public Hurdles(int maxSizeHurdles, int lengthOfThreadmill, int heightOfWall) {
+        int countTh, countWa;
+        int length = 0;
+        int height = 0;
+
+        // Количество дорожек при нечетном числе участков на единицу больше
+        if (maxSizeHurdles % 2 == 1) {
+            countTh = maxSizeHurdles / 2 + 1;
+            countWa = maxSizeHurdles / 2;
+        } else{
+            countTh = maxSizeHurdles / 2;
+            countWa = maxSizeHurdles / 2;
         }
 
-//        System.out.println(hurdles.length + " " + threadmills.length + " " + walls.length);
+        // Создаем препятствия
+        Threadmill threadmill = new Threadmill(lengthOfThreadmill, countTh);
+        Wall wall = new Wall(heightOfWall, countWa);
+        Object[] hurdles = new Object[maxSizeHurdles];
+
+        // Присваиваем через одно каждое препятствие нашей дорожке
+        for (int i = 0; i < maxSizeHurdles; i += 2) {
+            hurdles[i] = threadmill;
+            if (i == maxSizeHurdles - 1)
+                break;
+            hurdles[i + 1] = wall;
+        }
+
+        // Вывод информации о дорожки в консоль
+        for (int i = 0; i < hurdles.length; i++) {
+            if (hurdles[i].equals(threadmill))
+                length+=threadmill.getLength();
+            if (hurdles[i].equals(wall))
+                height=wall.getHeight();
+            System.out.println(hurdles[i]);
+        }
+        System.out.println("summ of legth: " + length + ". height walls: " + height);
 
     }
 }

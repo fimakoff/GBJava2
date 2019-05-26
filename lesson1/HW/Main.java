@@ -19,7 +19,7 @@ public class Main {
         Scanner scInt = new Scanner(System.in);
         Scanner scCh = new Scanner(System.in);
 
-        Hurdles hd = new Hurdles(3);
+        Hurdles hd = new Hurdles(13, 10 ,3);
 //        int thLength = 5;
 //        Threadmill th1 = new Threadmill();
 //        th1.setLength(thLength);
