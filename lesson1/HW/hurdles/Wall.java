@@ -1,10 +1,14 @@
-package lesson1.HW.method;
+package lesson1.HW.hurdles;
 
 public class Wall {
     private int height;
+    private int count;
 
-    public Wall() {
+    public Wall(int height, int count) {
+        this.count = count;
         this.height = height;
+        System.out.println("Количество барьеров: " + count);
+        System.out.println("высота барьера: " + height);
     }
 
     public void setHeight(int height) {
