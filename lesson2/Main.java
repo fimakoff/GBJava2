@@ -2,58 +2,62 @@ package lesson2;
 
 public class Main {
     private static final int countOfElements = 4;
-    public static void main(String[] args) {
-//        String[][] array1 = new String[][]{
-//                {"0", "1", "2", "3"},
-//                {"4", "5", "6", "7"},
-//                {"8", "9", "10", "11"},
-//                {"10", "12", "13", "14", "15"}
-//        };
-//
-//        String[][] array2 = new String[][]{
-//                {"0", "1", "2", "3"},
-//                {"4", "5", "6", "7"},
-//                {"8", "9", "10", "11"},
-//                {"12", "13", "14", "15"},
-//                {}
-//        };
-//
-//        String[][] array3 = new String[][]{
-//                {"0", "1", "2", "3"},
-//                {"4", "5", "6", "7"},
-//                {"8", "STRING", "10", "11"},
-//                {"12", "13", "14", "15"}
-//        };
+    public static void main(String[] args) throws MyArraySizeException, MyArrayDataException {
+        String[][] array1 = new String[][]{
+                {"0", "1", "2", "3"},
+                {"4", "5", "6", "7"},
+                {"8", "9", "10", "11"},
+                {"10", "12", "13", "14", "15"}
+        };
+
+        String[][] array2 = new String[][]{
+                {"0", "1", "2", "3"},
+                {"4", "5", "6", "7"},
+                {"8", "9", "10", "11"},
+                {"12", "13", "14", "15"},
+                {}
+        };
+
+        String[][] array3 = new String[][]{
+                {"0", "1", "2", "3"},
+                {"4", "5", "6", "7"},
+                {"8", "STRING", "10", "11"},
+                {"12", "13", "14", "15"}
+        };
 
         String[][] array4 = new String[][]{
                 {"0", "1", "2", "3"},
                 {"4", "5", "6", "7"},
                 {"8", "9", "10", "11"},
-                {"12", "13", "14", "15"}
+                {"12", "13", "1r4", "15"}
         };
-//        try {
-//            parseAndSumm(array1);
-//        } catch (MyArraySizeException e) {
-//            System.out.println(e.getMessage());
-//        } catch (MyArrayDataException e) {
-//            e.getMessage();
-//        }
-//
-//        try {
-//            parseAndSumm(array2);
-//        } catch (MyArraySizeException e) {
-//            System.out.println(e.getMessage());
-//        } catch (MyArrayDataException e) {
-//            e.getMessage();
-//        }
-//
-//        try {
-//            parseAndSumm(array3);
-//        } catch (MyArraySizeException e) {
-//            System.out.println(e.getMessage());
-//        } catch (MyArrayDataException e) {
-//            e.getMessage();
-//        }
+
+        try {
+            parseAndSumm(array1);
+        } catch (MyArraySizeException e) {
+            System.out.println(e.getMessage());
+        } catch (MyArrayDataException e) {
+            e.getMessage();
+            parseAndSumm(array1);
+        }
+
+        try {
+            parseAndSumm(array2);
+        } catch (MyArraySizeException e) {
+            System.out.println(e.getMessage());
+        } catch (MyArrayDataException e) {
+            e.getMessage();
+            parseAndSumm(array2);
+        }
+
+        try {
+            parseAndSumm(array3);
+        } catch (MyArraySizeException e) {
+            System.out.println(e.getMessage());
+        } catch (MyArrayDataException e) {
+            e.getMessage();
+            parseAndSumm(array3);
+        }
 
         try {
             parseAndSumm(array4);
@@ -61,6 +65,7 @@ public class Main {
             System.out.println(e.getMessage());
         } catch (MyArrayDataException e) {
             e.getMessage();
+            parseAndSumm(array4);
         }
     }
 
@@ -71,12 +76,13 @@ public class Main {
             if (arr[i].length != countOfElements)
                 throw new MyArraySizeException("Размер внутреннего массива не соответствует необходимому");
             for (int j = 0; j < arr[i].length; j++) {
-                if (!isNumeric(arr[i][j])) throw new MyArrayDataException("Неверный тип данных в ячейке ", i, j);
+                if (!isNumeric(arr[i][j])) throw new MyArrayDataException("Неверный тип данных в ячейке ", i, j, arr);
                 int a = Integer.parseInt(arr[i][j]);
                 summ += a;
             }
         }
         System.out.println("Сумма элементов массива составляет: " + summ);
+
     }
 
     private static boolean isNumeric(String strNum) {
