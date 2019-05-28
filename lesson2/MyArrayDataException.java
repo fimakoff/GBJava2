@@ -1,13 +1,21 @@
 package lesson2;
 
-import java.util.Scanner;
+class MyArrayDataException extends Exception {
+    private int i;
+    private int j;
 
-class MyArrayDataException extends Exception{
-    private Scanner sc = new Scanner(System.in);
-    MyArrayDataException(String message, int i, int j, String[][]arr) {
+    MyArrayDataException(String message, int i, int j) {
         super(message);
+        this.i = i;
+        this.j = j;
         System.out.println(message + i + ", " + j);
-        System.out.print("Введите корретное значение: ");
-        arr[i][j] = sc.next();
+    }
+
+    int getI() {
+        return i;
+    }
+
+    int getJ() {
+        return j;
     }
 }

@@ -1,7 +1,10 @@
 package lesson2;
 
+import java.util.Scanner;
+
 public class Main {
     private static final int countOfElements = 4;
+
     public static void main(String[] args) throws MyArraySizeException, MyArrayDataException {
         String[][] array1 = new String[][]{
                 {"0", "1", "2", "3"},
@@ -43,10 +46,9 @@ public class Main {
         int summ = 0;
         if (arr.length != countOfElements) throw new MyArraySizeException("Размер внешнего массива не соответствует необходимому");
         for (int i = 0; i < arr.length; i++) {
-            if (arr[i].length != countOfElements)
-                throw new MyArraySizeException("Размер внутреннего массива не соответствует необходимому");
+            if (arr[i].length != countOfElements) throw new MyArraySizeException("Размер внутреннего массива не соответствует необходимому");
             for (int j = 0; j < arr[i].length; j++) {
-                if (!isNumeric(arr[i][j])) throw new MyArrayDataException("Неверный тип данных в ячейке ", i, j, arr);
+                if (!isNumeric(arr[i][j])) throw new MyArrayDataException("Неверный тип данных в ячейке ", i, j);
                 int a = Integer.parseInt(arr[i][j]);
                 summ += a;
             }
@@ -60,12 +62,15 @@ public class Main {
     }
 
     private static void letsgo(String[][] arr) throws MyArraySizeException, MyArrayDataException {
+        Scanner sc = new Scanner(System.in);
         try {
             parseAndSumm(arr);
         } catch (MyArraySizeException e) {
             System.out.println(e.getMessage());
         } catch (MyArrayDataException e) {
             e.getMessage();
+            System.out.print("Введите корректное значение: ");
+            arr[e.getI()][e.getJ()] = String.valueOf(sc.nextInt());
             parseAndSumm(arr);
         }
     }
