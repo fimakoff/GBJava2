@@ -32,41 +32,11 @@ public class Main {
                 {"12", "13", "1r4", "15"}
         };
 
-        try {
-            parseAndSumm(array1);
-        } catch (MyArraySizeException e) {
-            System.out.println(e.getMessage());
-        } catch (MyArrayDataException e) {
-            e.getMessage();
-            parseAndSumm(array1);
-        }
 
-        try {
-            parseAndSumm(array2);
-        } catch (MyArraySizeException e) {
-            System.out.println(e.getMessage());
-        } catch (MyArrayDataException e) {
-            e.getMessage();
-            parseAndSumm(array2);
-        }
-
-        try {
-            parseAndSumm(array3);
-        } catch (MyArraySizeException e) {
-            System.out.println(e.getMessage());
-        } catch (MyArrayDataException e) {
-            e.getMessage();
-            parseAndSumm(array3);
-        }
-
-        try {
-            parseAndSumm(array4);
-        } catch (MyArraySizeException e) {
-            System.out.println(e.getMessage());
-        } catch (MyArrayDataException e) {
-            e.getMessage();
-            parseAndSumm(array4);
-        }
+        letsgo(array1);
+        letsgo(array2);
+        letsgo(array3);
+        letsgo(array4);
     }
 
     private static void parseAndSumm(String[][] arr) throws MyArraySizeException, MyArrayDataException {
@@ -89,4 +59,14 @@ public class Main {
         return strNum.matches("-?\\d+(\\.\\d+)?");
     }
 
+    private static void letsgo(String[][] arr) throws MyArraySizeException, MyArrayDataException {
+        try {
+            parseAndSumm(arr);
+        } catch (MyArraySizeException e) {
+            System.out.println(e.getMessage());
+        } catch (MyArrayDataException e) {
+            e.getMessage();
+            parseAndSumm(arr);
+        }
+    }
 }
