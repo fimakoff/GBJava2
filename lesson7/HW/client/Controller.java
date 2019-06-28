@@ -1,6 +1,8 @@
 package lesson7.HW.client;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -10,6 +12,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Controller {
 
@@ -25,28 +29,59 @@ public class Controller {
     TextField loginField;
     @FXML
     PasswordField passwordField;
+    @FXML
+    ListView<String> clientList;
 
-    Socket socket;
-    DataInputStream in;
-    DataOutputStream out;
+    private Socket socket;
+    private DataInputStream in;
+    private DataOutputStream out;
 
-    final String ADDRESS = "localhost";
-    final int PORT = 8181;
+    private final String ADDRESS = "localhost";
+    private final int PORT = 8181;
 
-    private boolean isAAutorized;
+    private static boolean isAuthorized;
+    static String login;
+    static String password;
 
-    private void setAutorized(boolean isAAutorized) {
-        this.isAAutorized = isAAutorized;
-        if (!isAAutorized) {
+
+
+    void timeOut(int time) {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            int i = time;
+            @Override
+            public void run() {
+                System.out.println(Controller.isAuthorized + " " + i--);
+                if (Controller.isAuthorized && i != 0){
+                    System.out.println("Client is already connected with login: \"" + login + "\" password: \"" + password + "\"");
+                    timer.cancel();
+                }
+                else if (i == 0) {
+                    System.exit(0);
+                    System.out.println("Client is terminated");
+                    close();
+                }
+            }
+        }, 0, 1000);
+    }
+
+    private void setAuthorized(boolean isAuthorized) {
+        Controller.isAuthorized = isAuthorized;
+        if (!Controller.isAuthorized) {
             upperPanel.setVisible(true);
             upperPanel.setManaged(true);
             bottomPanel.setVisible(false);
             bottomPanel.setManaged(true);
+            clientList.setVisible(false);
+            clientList.setManaged(false);
         } else {
             upperPanel.setVisible(false);
             upperPanel.setManaged(false);
             bottomPanel.setVisible(true);
             bottomPanel.setManaged(true);
+            clientList.setVisible(true);
+            clientList.setManaged(true);
+            Controller.isAuthorized = isAuthorized;
         }
     }
 
@@ -86,6 +121,15 @@ public class Controller {
             if (str.equalsIgnoreCase("/serverclosed")) {
                 break;
             }
+            if (str.startsWith("/clientlist")) {
+                String[] tokens = str.split(" ");
+                Platform.runLater(() -> {
+                    clientList.getItems().clear();
+                    for (int i = 1; i < tokens.length; i++) {
+                        clientList.getItems().add(tokens[i]);
+                    }
+                });
+            }
             chatArea.appendText(str + "\n");
         }
     }
@@ -94,7 +138,7 @@ public class Controller {
         while (true) {
             String str = in.readUTF();
             if (str.startsWith("/authOK")) {
-                setAutorized(true);
+                setAuthorized(true);
                 break;
             } else {
                 chatArea.appendText(str + "\n");
@@ -108,6 +152,8 @@ public class Controller {
         }
         try {
             out.writeUTF("/auth " + loginField.getText() + " " + passwordField.getText());
+            login = loginField.getText();
+            password = passwordField.getText();
             loginField.clear();
             passwordField.clear();
         } catch (IOException e) {

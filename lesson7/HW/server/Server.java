@@ -44,19 +44,53 @@ class Server {
         }
     }
 
-    public void broadcast(String message) {
+    void broadcast(ClientHandler from, String message) {
         for (ClientHandler clientHandler : peers) {
-            clientHandler.sendMsg(message);
+            if (!clientHandler.checkBlackList(from.getNick())) {
+                clientHandler.sendMsg(message);
+            }
         }
     }
 
     void subscribe(ClientHandler clientHandler) {
         peers.add(clientHandler);
+        broadcastClientList();
     }
 
     void unsubscribe(ClientHandler clientHandler) {
         peers.remove(clientHandler);
+        broadcastClientList();
     }
 
+    void sendPersonalMsg(ClientHandler from, String nickTo, String msg) {
+        for (ClientHandler clientHandler : peers) {
+            if (clientHandler.getNick().equalsIgnoreCase(nickTo)) {
+                clientHandler.sendMsg("FROM: " + from.getNick() + " SEND: " + msg);
+                from.sendMsg("TO: " + nickTo + " SEND: " + msg);
+                return;
+            }
+        }
+        from.sendMsg("Клиент с ником: " + nickTo + " не найден в чате");
+    }
 
+    boolean isNickBusy(String nick) {
+        for (ClientHandler clientHandler : peers) {
+            if (clientHandler.getNick().equalsIgnoreCase(nick)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void broadcastClientList() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("/clientlist ");
+        for (ClientHandler clientHandler : peers) {
+            sb.append(clientHandler.getNick() + " ");
+        }
+        String out = sb.toString();
+        for (ClientHandler clientHandler : peers) {
+            clientHandler.sendMsg(out);
+        }
+    }
 }

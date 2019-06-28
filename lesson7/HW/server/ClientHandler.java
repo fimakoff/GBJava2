@@ -4,6 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 class ClientHandler {
 
@@ -12,18 +15,24 @@ class ClientHandler {
     private AuthService authService;
     private DataOutputStream out;
     private DataInputStream in;
-    private String nick = null;
+    private String nick;
+    private List<String> blackList;
+
+    String getNick() {
+        return nick;
+    }
 
     ClientHandler(Server server, Socket socket) {
         try {
-            this.socket = socket;
+            this.blackList = new CopyOnWriteArrayList<>();
             this.server = server;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
             this.authService = new AuthServiceImpl();
+            this.socket = socket;
             new Thread(() -> {
                 try {
-                    autorization();
+                    authorization();
                     read();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -37,31 +46,57 @@ class ClientHandler {
     }
 
     private void read() {
-        while (true) {
-            try {
+        try {
+            while (true) {
                 String str = in.readUTF();
-                if (str.equalsIgnoreCase("/end")) {
-                    sendMsg("/serverclosed");
-                    break;
+                if (str.startsWith("/")) {
+                    if (str.equalsIgnoreCase("/end")) {
+                        sendMsg("/serverclosed");
+                        break;
+                    }
+                    if (str.startsWith("/w ")) {
+                        String[] tokens = str.split(" ", 3);
+                        server.sendPersonalMsg(this, tokens[1], tokens[2]);
+                    }
+                    if (str.startsWith("/blacklist ")) {
+                        String[] tokens = str.split(" ");
+                        blackList.add(tokens[1]);
+                        System.out.println(Arrays.toString(blackList.toArray()));
+                        sendMsg("Вы добавили пользователя с ником " + tokens[1] +
+                                " в черный список!");
+                    }
+                    if (str.startsWith("/unblacklist ")) {
+                        String[] tokens = str.split(" ");
+                        blackList.remove(tokens[1]);
+                        System.out.println(Arrays.toString(blackList.toArray()));
+                        sendMsg("Вы удалили пользователя с ником " + tokens[1] +
+                                " из черного списка!");
+                    }
+                } else {
+                    server.broadcast(this, nick + " " + str);
                 }
-                server.broadcast(str);
-            } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Client " + str);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    // /auth login1 password1
-    private void autorization() throws IOException {
+    private void authorization() throws IOException {
         while (true) {
             String str = in.readUTF();
             if (str.startsWith("/auth")) {
                 String[] tokens = str.split(" ");
-                nick = authService.getNick(tokens[1], tokens[2]);
-                if (nick != null) {
-                    sendMsg("/authOK");
-                    server.subscribe(this);
-                    break;
+                String newNick = authService.getNick(tokens[1], tokens[2]);
+                if (newNick != null) {
+                    if (!server.isNickBusy(newNick)) {
+                        sendMsg("/authOK");
+                        nick = newNick;
+                        server.subscribe(this);
+                        break;
+                    } else {
+                        sendMsg("Учетная запись уже используется!");
+                    }
                 } else {
                     sendMsg("Неверный логин/пароль");
                 }
@@ -88,9 +123,7 @@ class ClientHandler {
         }
     }
 
-    void iSendMsg(String message){
-        
+    boolean checkBlackList(String nick) {
+        return blackList.contains(nick);
     }
-
-
 }
